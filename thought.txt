@@ -1,0 +1,6 @@
+we don't see transitivity of preserving counts and recalculating them from the vector spaces
+
+ex. back to front, back and forth : no relation between front and forth
+
+potential fix
+do the minimization over all pairs of words instead of words which occur, this is reminiscent of negative sampling.

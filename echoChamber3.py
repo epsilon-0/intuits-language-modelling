@@ -42,7 +42,7 @@ def cosSimilarity(vec1, vec2):
 
 def norm(vec):  #l2 norm
     summer = 0.
-    for i in xrange(len(vec)):
+    for i in range(len(vec)):
         summer += (vec[i] * vec[i])
     return np.sqrt(summer)
 
@@ -50,7 +50,7 @@ def norm(vec):  #l2 norm
 def printNorms(Mat):
     total = 0.
     norms = np.zeros(Mat.shape[0])
-    for i in xrange(0, Mat.shape[0]):
+    for i in range(0, Mat.shape[0]):
         norms[i] = norm(Mat[i])
         total += norms[i]
     #print norms
@@ -67,7 +67,7 @@ def IsotropyMetric1(
     dis = np.zeros(distMatrix.shape[0])
     minCount = 5
     #print "M[0]" , M.shape[0]*percent
-    for i in xrange(distMatrix.shape[0]):  # for each vector
+    for i in range(distMatrix.shape[0]):  # for each vector
         #dis[i] =metric(distMatrix[])
         #beep boop baaaaap
         dis = distMatrix[distMatrix[:, i].argsort(kind='mergesort')]
@@ -85,10 +85,10 @@ def IsotropyMetric2(
     # find average distance from 1 vector to the nearest 10% of the vectors
     summer = np.zeros(mat.shape[1])
     ret = 0
-    for i in xrange(mat.shape[0]):  # for each vector
+    for i in range(mat.shape[0]):  # for each vector
         summer += mat[
             i]  # by central limit theorem, this converges to a gaussian dist. centered at 0
-    #for i in xrange (len(summer)):
+    #for i in range (len(summer)):
     #	ret += summer[i]/stdDev
 
     #print summer/(len(summer)*np.sqrt(mat.shape[0])), stdDev
@@ -115,8 +115,8 @@ def distanceArbitraryMatrix(
 ):  # 4 kinds of metrics : euclidean, inverted euclidean, dot, cosine similarity
     S = np.zeros((M.shape[0], M.shape[0]))
 
-    for i in xrange(M.shape[0]):
-        for j in xrange(i + 1):
+    for i in range(M.shape[0]):
+        for j in range(i + 1):
             S[i][j] = metric(M[i], M[j])
             S[j][i] = S[i][j]
     return S
@@ -208,7 +208,7 @@ def binarySearchSolution(function, epsilon, lower, upper):
     high = upper
     mid = (high + low) / 2.
     tempSol = 100.
-    for i in xrange(0, 64):
+    for i in range(0, 64):
         tempSol = function(mid)
         #	print tempSol
         if (abs(tempSol) < epsilon):
@@ -382,7 +382,7 @@ def findOneClosestVectors(Mat, i, j, n, metric):  # look into pyfly
     # returns one of the n closest vectors to i, in Mat, which is NOT i or j
     dis = np.zeros((Mat.shape[0], 2))
 
-    for a in xrange(0, Mat.shape[0]):
+    for a in range(0, Mat.shape[0]):
         if (a == j or a == i):
             dis[a] = 0
 
@@ -406,7 +406,7 @@ def converseOnceAbout(
 
 
 def converseAlot(M, N, n, metric):  # completely random conversations
-    for a in xrange(0, n):
+    for a in range(0, n):
         i = np.random.randint(0, M.shape[0] - 1)
         j = np.random.randint(0, M.shape[0] - 1)
         while (j == i):
@@ -425,7 +425,7 @@ def converseAlotRandWalk(
         j = np.random.randint(0, M.shape[0] - 1)
     converseOnceAbout(M, N, i, j, metric)  # first conversation
     count = 0
-    for a in xrange(0, n):
+    for a in range(0, n):
         count = count + 1
         if (count ==
                 conversationLength):  # random subject, every x # of word pairs
@@ -476,8 +476,8 @@ def calcZ(Mat):
     contexts = generateNVectors(NumConversations, Mat.shape[1], -rangeVecs,
                                 rangeVecs)
     Zc = np.zeros(NumConversations)  # 1 Zc for each conversation
-    for i in xrange(0, len(Zc)):
-        for j in xrange(0, Mat.shape[0]):  # sum over all words
+    for i in range(0, len(Zc)):
+        for j in range(0, Mat.shape[0]):  # sum over all words
             x = 1
             #Zc[i] += np.exp(PMI(context[i], ))
     return 1
@@ -489,8 +489,8 @@ def calcZ1(Mat):
 
     ret = np.zeros((Mat.shape[0], Mat.shape[0]))
 
-    for i in xrange(0, Mat.shape[0]):
-        for j in xrange(0, Mat.shape[0]):
+    for i in range(0, Mat.shape[0]):
+        for j in range(0, Mat.shape[0]):
             ret[i][j] = (norm(Mat[i] + Mat[j])**2 /
                          (2 * Mat.shape[1])) - (np.log(cooccurrenceMat[i][j] /
                                                        (totalWordsSaid / 2)))
@@ -505,7 +505,7 @@ def calcZ2(Mat):
     logZ = np.zeros(Mat.shape[0])
     maxe = 0
     mine = 10000000
-    for i in xrange(0, Mat.shape[0]):
+    for i in range(0, Mat.shape[0]):
         if (cooccurrenceMat[i][i] == 0):
             continue
         logZ[i] = (norm(Mat[i])**2 /
@@ -521,8 +521,8 @@ def calcZ2(Mat):
 def theorem22Right(Mat, logZ):
     global cooccurrenceMat
     ret = np.zeros((Mat.shape[0], Mat.shape[0]))
-    for i in xrange(0, Mat.shape[0]):
-        for j in xrange(0, Mat.shape[0]):
+    for i in range(0, Mat.shape[0]):
+        for j in range(0, Mat.shape[0]):
             ret[i][j] = (norm(Mat[i] + Mat[j]) /
                          (2 * Mat.shape[1])) - (2 * logZ)
     return ret
@@ -532,8 +532,8 @@ def theorem22Left(Mat):
     global cooccurrenceMat
     global totalWordsSaid
     ret = np.zeros((Mat.shape[0], Mat.shape[0]))
-    for i in xrange(0, Mat.shape[0]):
-        for j in xrange(0, Mat.shape[0]):
+    for i in range(0, Mat.shape[0]):
+        for j in range(0, Mat.shape[0]):
             if (cooccurrenceMat[i][j] == 0):
                 ret[i][j] = 0
                 continue
@@ -576,7 +576,7 @@ def entirePipelineRandWalk(
         printIsotropy(
             "Zresults Z value 1 way - Z value another (closer to 0 is best)",
             "1" + metric.__name__ + "/" + name + "RandWalk_Zresults.txt")
-    for i in xrange(1, NumConversations + 1):
+    for i in range(1, NumConversations + 1):
         print(i)
         if (wantPrint):
             if (i % ZsEvery == 0):
@@ -643,7 +643,7 @@ def entirePipeline(
         printIsotropy(
             "Zresults Z value 1 way - Z value another (closer to 0 is best)",
             "1" + metric.__name__ + "/" + name + "Random_Zresults.txt")
-    for i in xrange(1, NumConversations + 1):
+    for i in range(1, NumConversations + 1):
         print(i)
         if (wantPrint):
             if (i % ZsEvery == 0):
