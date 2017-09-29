@@ -55,7 +55,7 @@ def printNorms(Mat):
         total += norms[i]
     #print norms
     a = (total) / (Mat.shape[0])
-    print("average norm : " + str(a))
+    print("average norm : ", a)
     return a
 
 
@@ -243,11 +243,11 @@ def solveforNewAngle(v1, v2, e1, e2, angle12, S):
     qwe = norm(v2) * np.sin(angle12) / S
     #print qwe
     if (abs(qwe) >= 1):
-        print("problem child" + str(qwe))
+        print("problem child", qwe)
         print(v1, v2)
         print(e1, e2)
-        print("angle" + str(angle12))
-        print("s", S)
+        print("angle ", angle12)
+        print("s ", S)
         return -101
     return np.arcsin(qwe)
 
@@ -255,8 +255,8 @@ def solveforNewAngle(v1, v2, e1, e2, angle12, S):
 def moveMatOnceCosineWay(
         metric, M, i, j
 ):  # let's see if this way of moving things, for cosine similarity is better.
-    #in the plane defined by vec1 and vec2, calculate the polar coordinates to
-    #print "i,j", i,j
+    # in the plane defined by vec1 and vec2, calculate the polar coordinates to
+    # print "i,j", i,j
     global totalWordsSaid
     global cooccurrenceMat
     totalWordsSaid += 2
@@ -293,20 +293,20 @@ def moveMatOnceCosineWay(
         print("Skipping 1, because it is too close")
         return
     dTheta = alpha * angleBetween  # this is the amount that both vectors move towards each other along their spheres # 10 percent of the angle
-    #diff1 = M[i] -   (a1*np.cos(0) *e1) +(b1 *np.sin(0) * e2)
-    #diff2 = M[j] - 	(a1*np.cos(angleBetween) *e1) +(b1 *np.sin(angleBetween) * e2) # just checking that the gram schmidt process is good
-    #print "angle is ", dTheta
-    #print "diffs!" , norm(diff1), norm(diff2)
+    # diff1 = M[i] -   (a1*np.cos(0) *e1) +(b1 *np.sin(0) * e2)
+    # diff2 = M[j] - 	(a1*np.cos(angleBetween) *e1) +(b1 *np.sin(angleBetween) * e2) # just checking that the gram schmidt process is good
+    # print "angle is ", dTheta
+    # print "diffs!" , norm(diff1), norm(diff2)
     prevMet = metric(M[i], M[j])
     s = M[i]
     r = M[j]
-    #print "old metric", metric(M[i],M[j])
-    M[i] = c * e1 + (r * np.cos(dTheta * strengthI) * e1) + (s * np.sin(
-        dTheta * strengthI) * e2)
+    # print "old metric", metric(M[i],M[j])
+    M[i] = c * e1 + (r * np.cos(dTheta * strengthI) * e1) + (
+        s * np.sin(dTheta * strengthI) * e2)
     M[j] = c * e1 + (r * np.cos(angleBetween - (dTheta * strengthJ)) * e1) + (
         s * np.sin(angleBetween - (dTheta * strengthJ)) * e2
     )  # moves both vectors along their ellipse, towards one another in a way that increases their cosine similarity
-    #print "new metric", metric(M[i],M[j])
+    # print "new metric", metric(M[i],M[j])
     if ((metric(M[i], M[j]) - prevMet) < 0):
         print("this should be positive _WRONG")
     return
@@ -315,8 +315,8 @@ def moveMatOnceCosineWay(
 def moveMatOnceCosineWayOld(
         metric, M, i, j
 ):  # let's see if this way of moving things, for cosine similarity is better.
-    #in the plane defined by vec1 and vec2, calculate the polar coordinates to
-    #print "i,j", i,j
+    # in the plane defined by vec1 and vec2, calculate the polar coordinates to
+    # print "i,j", i,j
     global totalWordsSaid
     global cooccurrenceMat
     totalWordsSaid += 2
@@ -358,26 +358,26 @@ def moveMatOnceCosineWayOld(
     diff2 = M[j] - (a1 * np.cos(angleBetween) * e1) + (
         b1 * np.sin(angleBetween) * e2
     )  # just checking that the gram schmidt process is good
-    #print "angle is ", dTheta
-    #print "diffs!" , norm(diff1), norm(diff2)
+    # print "angle is ", dTheta
+    # print "diffs!" , norm(diff1), norm(diff2)
     prevMet = metric(M[i], M[j])
     s = M[i]
     r = M[j]
-    #print "old metric", metric(M[i],M[j])
-    M[i] = (a1 * np.cos(dTheta * strengthI) * e1) + (b1 * np.sin(
-        dTheta * strengthI) * e2)
+    # print "old metric", metric(M[i],M[j])
+    M[i] = (a1 * np.cos(dTheta * strengthI) * e1) + (
+        b1 * np.sin(dTheta * strengthI) * e2)
     M[j] = (a1 * np.cos(angleBetween - (dTheta * strengthJ)) * e1) + (
         b1 * np.sin(angleBetween - (dTheta * strengthJ)) * e2
     )  # moves both vectors along their ellipse, towards one another in a way that increases their cosine similarity
-    #print "new metric", metric(M[i],M[j])
+    # print "new metric", metric(M[i],M[j])
     if ((metric(M[i], M[j]) - prevMet) < 0):
         print("this should be positive _WRONG")
     return
-    #print "we are in the cosine way"
-    #angle between is the angle between vec 1 and vec2
+    # print "we are in the cosine way"
+    # angle between is the angle between vec 1 and vec2
 
 
-### rand walk approach
+# rand walk approach
 def findOneClosestVectors(Mat, i, j, n, metric):  # look into pyfly
     # returns one of the n closest vectors to i, in Mat, which is NOT i or j
     dis = np.zeros((Mat.shape[0], 2))
@@ -467,8 +467,8 @@ def PMI(i, j):
     global totalWordsSaid
     global cooccurrenceMat
     return np.log((totalWordsSaid / 2) * cooccurrenceMat[i][j] /
-                  (cooccurrenceMat[i][i] *
-                   cooccurrenceMat[j][j]))  # =log(p(v1,v2)/p(v1)p(v2))
+                  (cooccurrenceMat[i][i] * cooccurrenceMat[j][j]
+                   ))  # =log(p(v1,v2)/p(v1)p(v2))
 
 
 def calcZ(Mat):
@@ -581,10 +581,9 @@ def entirePipelineRandWalk(
         if (wantPrint):
             if (i % ZsEvery == 0):
                 s = (theorem22Left(Mat) - theorem22Right(Mat, calcZ2(Mat)))
-                print(i, "Z shit: should be close to 0 \n", s)
-                print("\n average " + str(np.average(s)))
-                print("should be rougly: |" + str(calcZ2(Mat)) + "|")
-                print
+                print(i, " Z shit: should be close to 0 \n", s)
+                print("\n average ", np.average(s))
+                print("should be roughly: |", calcZ2(Mat), "|")
 
         converseAlotRandWalk(Mat, Mat2, printEvery, metric)
         printNorms(Mat)
@@ -592,7 +591,7 @@ def entirePipelineRandWalk(
             a = getIsotropy1(Mat, metric)  #knn
             b = getIsotropy2(Mat, metric)  #clt
 
-            print("istropy1 and 2 " + str(a) + "\t" + str(b))
+            print("istropy1 and 2 ", a, "\t", b)
             #		printIsotropy(a,"1"+metric.__name__+"/"+name+"isotropy.txt")
             printIsotropy(b, "1" + metric.__name__ + "/" + name +
                           "RandWalk_CLT_isotropy.txt")
@@ -648,19 +647,19 @@ def entirePipeline(
         if (wantPrint):
             if (i % ZsEvery == 0):
                 s = (theorem22Left(Mat) - theorem22Right(Mat, calcZ2(Mat)))
-                print(i, "Z shit:\n", s)
-                print("\n average", np.average(s))
-                print("should be rougly: |" + str(calcZ2(Mat)) + "|")
+                print(i, " Z shit:\n", s)
+                print("\n average ", np.average(s))
+                print("should be rougly: |", calcZ2(Mat), "|")
         converseAlot(Mat, Mat2, printEvery, metric)
         b = getIsotropy2(Mat, metric)  #CLT
         a = getIsotropy1(Mat, metric)  #kNN
 
-        print("Isotropy1",
-              getIsotropy1(Mat, metric), "Isotropy2",
+        print("Isotropy1 ",
+              getIsotropy1(Mat, metric), " Isotropy2 ",
               getIsotropy2(Mat, metric))
 
         if (wantPrint):
-            print("istropy1 and 2 " + str(a) + "\t" + str(b))
+            print("isotropy1 and 2 ", a, "\t", b)
             #		printIsotropy(a,"1"+metric.__name__+"/"+name+"isotropy.txt")
             printIsotropy(
                 b,
@@ -683,26 +682,26 @@ def entirePipeline(
 entirePipelineRandWalk(invertEuc, "invertEuc_RandWalk")
 entirePipeline(invertEuc, "invertEuc_RandWalk")
 
-#entirePipelineRandWalk(negEuc, "negEuc_RandWalk")
-#entirePipeline(negEuc, "negEuc_Random")
+# entirePipelineRandWalk(negEuc, "negEuc_RandWalk")
+# entirePipeline(negEuc, "negEuc_Random")
 
-#entirePipelineRandWalk(cosSimilarity, "Cosine_RandWalk")#
-#entirePipeline(cosSimilarity, "Cosine_Random")
+# entirePipelineRandWalk(cosSimilarity, "Cosine_RandWalk")#
+# entirePipeline(cosSimilarity, "Cosine_Random")
 
-#entirePipeline(np.dot, "Dot_Random")
-#entirePipelineRandWalk(np.dot, "Dot_RandWalk")
+# entirePipeline(np.dot, "Dot_Random")
+# entirePipelineRandWalk(np.dot, "Dot_RandWalk")
 
-##Start with some representaiton - babble for 100 steps; observe distance, repeate
-##(over time, distance between conversation and previous conversatino goes goes to 0) (this plot will be the statistics)
-##Null hypothesis - Random words (this is the code that is below this)
-##
-##entire pipeline rand walk is doing a random walk within an area (i.e. choose one of the kNN words to converse with)
-##Also have a situation where you converse, using RAND walk (choose one of the kNN words)
-##Start with some representaiton - babble for 100 steps; observe distance, repeate
-##(over time, distance between conversation and previous conversatino goes goes to 0) (this plot will be the statistics)
-##Null hypothesis - Random words
-##
-##
-##Add in the functinoality of doing a random walk within an area (i.e. choose one of the kNN words to converse with)
-##Also have a situation where you converse, using RAND walk (choose one of the kNN words)
-##
+# Start with some representaiton - babble for 100 steps; observe distance, repeat
+# (over time, distance between conversation and previous conversatino goes goes to 0) (this plot will be the statistics)
+# Null hypothesis - Random words (this is the code that is below this)
+#
+# entire pipeline rand walk is doing a random walk within an area (i.e. choose one of the kNN words to converse with)
+# Also have a situation where you converse, using RAND walk (choose one of the kNN words)
+# Start with some representaiton - babble for 100 steps; observe distance, repeat
+# (over time, distance between conversation and previous conversatino goes goes to 0) (this plot will be the statistics)
+# Null hypothesis - Random words
+#
+#
+# Add in the functinoality of doing a random walk within an area (i.e. choose one of the kNN words to converse with)
+# Also have a situation where you converse, using RAND walk (choose one of the kNN words)
+###
