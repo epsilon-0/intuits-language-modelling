@@ -17,7 +17,7 @@ variance = (2 * rangeVecs) / 12.
 stdDev = np.sqrt(
     variance
 )  # we know that this will be the standard deviation of the gaussian as well, because summing is
-#linear operation, and the gaussian is simply the sum of n random variables
+# linear operation, and the gaussian is simply the sum of n random variables
 printEvery = 100  # print every 100 word pairs
 conversationLength = 201  # how many words are said on a topic
 NumConversations = 500
@@ -27,7 +27,7 @@ totalWordsSaid = 0
 wantPrint = True
 
 # need an accelearation of learning rate, based on how frequently the coocur
-#need very specific definition of co occurence, in order for everything not to converge to 1 point
+# need very specific definition of co occurence, in order for everything not to converge to 1 point
 
 
 def generateNVectors(vecs, dimension, low, high):

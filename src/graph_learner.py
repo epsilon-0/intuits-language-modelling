@@ -7,8 +7,6 @@ import math
 
 import numpy as np
 
-import random
-
 import sklearn.manifold
 
 import scipy.spatial
@@ -32,10 +30,10 @@ def crawl(graph,
     if (len(nbh) == 0):
         return word
     nextWord = np.random.choice(nbh, p=weights)
-    if (random.random() < jumpProbability):
-        nextWord = random.choice(graph.nodes())
-    if ((random.random() < stopProbability and nextWord not in conversation) or
-            steps > maxSteps):
+    if (np.random.random() < jumpProbability):
+        nextWord = np.random.choice(graph.nodes())
+    if ((np.random.random() < stopProbability and nextWord not in conversation)
+            or steps > maxSteps):
         return nextWord
     else:
         return crawl(graph, conversation, nextWord, stopProbability, steps + 1,

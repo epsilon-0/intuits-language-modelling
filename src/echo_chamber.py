@@ -3,12 +3,9 @@ import argparse
 
 import networkx as nx
 
-import random
-import math
+import numpy.random as rand
 
-import numpy as np
-
-from graph_learner import *
+from graph_learner import GraphLearner
 
 # command line arguments
 parser = argparse.ArgumentParser(
@@ -81,7 +78,7 @@ parser.add_argument(
     help='dimension for spectral embedding')
 args = parser.parse_args()
 
-random.seed(args.seed)
+rand.seed(args.seed)
 
 # read input file
 learners = []
@@ -109,7 +106,7 @@ for i in lines1:
     if (float(i[2]) < 1.0):
         graph1.add_edge(i[0], i[1], {
             'weight': 0,
-            'count': random.randint(15, 30),
+            'count': rand.randint(15, 30),
             'time': 0
         })
 for i in lines2:
@@ -120,7 +117,7 @@ for i in lines2:
     if (float(i[2]) < 1.0):
         graph2.add_edge(i[0], i[1], {
             'weight': 0,
-            'count': random.randint(15, 30),
+            'count': rand.randint(15, 30),
             'time': 0
         })
 for word in vocabSet:
@@ -143,6 +140,7 @@ vocab = list(vocabSet)
 learners.append(GraphLearner(graph1))
 learners.append(GraphLearner(graph2))
 
+
 def printDictionary(dists, vocab):
     newDists = [[1000.0 for i in range(len(vocab))] for j in range(len(vocab))]
     for i in range(len(vocab)):
@@ -160,7 +158,7 @@ for iters in range(1, args.iterations + 1):
     print("In Learning iteration {:d}.".format(iters))
 
     conversation = set()
-    topic = random.choice(vocab)
+    topic = rand.choice(vocab)
     conversation.add(topic)
 
     conversationLength = 0
@@ -168,7 +166,7 @@ for iters in range(1, args.iterations + 1):
     prevWord = topic
 
     while (conversationLength < 2 or (conversationLength < args.convlength and
-                                      random.random() > args.stopprob)):
+                                      rand.random() > args.stopprob)):
         conversationLength += 1
         nextWord = learners[conversationLength % 2].getNextWord(
             conversation, prevWord)
@@ -192,10 +190,8 @@ for iters in range(1, args.iterations + 1):
 
         print("    Calculating distance matrices at: {:d}.".format(iters))
 
-        dist1 = learners[0].getDiffusionDistanceMatrix(
-                vocab, args.dimension)
-        dist2 = learners[1].getDiffusionDistanceMatrix(
-                vocab, args.dimension)
+        dist1 = learners[0].getDiffusionDistanceMatrix(vocab, args.dimension)
+        dist2 = learners[1].getDiffusionDistanceMatrix(vocab, args.dimension)
         print("    Got distance matrices.")
 
         f1 = open(
