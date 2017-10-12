@@ -1,4 +1,5 @@
-# imports
+from util import printDictionary
+
 import argparse
 
 import networkx as nx
@@ -139,16 +140,6 @@ vocab = list(vocabSet)
 
 learners.append(GraphLearner(graph1))
 learners.append(GraphLearner(graph2))
-
-
-def printDictionary(dists, vocab):
-    newDists = [[1000.0 for i in range(len(vocab))] for j in range(len(vocab))]
-    for i in range(len(vocab)):
-        for j in range(len(vocab)):
-            if (vocab[j] in dists[vocab[i]]):
-                newDists[i][j] = float(dists[vocab[i]][vocab[j]])
-                newDists[j][i] = float(dists[vocab[i]][vocab[j]])
-    return '\n'.join(['\t'.join(map(str, i)) for i in newDists])
 
 
 convs = []
