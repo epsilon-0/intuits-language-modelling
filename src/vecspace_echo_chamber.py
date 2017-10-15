@@ -1,4 +1,6 @@
-from util import printDictionary
+from util import printDictionary, readVecspaceFile
+
+import autograd.numpy as np
 
 import argparse
 
@@ -59,7 +61,13 @@ args = parser.parse_args()
 
 rand.seed(args.seed)
 
-learners = []
+inp1 = readVecspaceFile(args.inputfile1)
+inp2 = readVecspaceFile(args.inputfile2)
+
+learners = [
+    VecspaceLearner(inp1[0], inp1[1]),
+    VecspaceLearner(inp2[0], inp2[1])
+]
 
 vocab = range(1, 200)
 

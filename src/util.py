@@ -39,8 +39,8 @@ def squaredNorm(corpus, dimension=50, num_iters=100, step_size=0.001):
         for i in range(num_vectors):
             for j in range(num_vectors):
                 answer += np.min([corpus[i][j], 150]) * (
-                    np.log(1 + corpus[i][j]) -
-                    np.square(np.linalg.norm(params[i] + params[j])) - params[-1][0])
+                    np.log(1 + corpus[i][j]) - np.square(
+                        np.linalg.norm(params[i] + params[j])) - params[-1][0])
         return answer
 
     vectors = np.array([[2 * np.random.random() for i in range(dimension)]
@@ -51,3 +51,12 @@ def squaredNorm(corpus, dimension=50, num_iters=100, step_size=0.001):
     new_params = optimizers.adam(
         ograd, params, num_iters=num_iters, step_size=step_size)
     return (new_params[:-1], new_params[-1][0])
+
+
+def readVecspaceFile(file_name):
+    inp = open(file_name, "r")
+    lines = inp.readlines()
+    vecspace = np.array([list(map(lambda x: float(x), i)) for i in lines[:-1]])
+    C = float(lines[-1].strip())
+    inp.close()
+    return (vecspace, C)
