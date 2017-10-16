@@ -1,1 +1,7 @@
 output/*
+input/*
+
+*__pycache__/*
+
+*.pyo
+*.pyc
