@@ -1,10 +1,8 @@
 from util import printDictionary, readVecspaceFile
 
-import autograd.numpy as np
-
 import argparse
 
-import numpy.random as rand
+import autograd.numpy.random as rand
 
 from vecspace_learner import VecspaceLearner
 
@@ -64,12 +62,12 @@ rand.seed(args.seed)
 inp1 = readVecspaceFile(args.inputfile1)
 inp2 = readVecspaceFile(args.inputfile2)
 
+vocab = len(inp1)
+
 learners = [
     VecspaceLearner(inp1[0], inp1[1]),
     VecspaceLearner(inp2[0], inp2[1])
 ]
-
-vocab = range(1, 200)
 
 convs = []
 # echo chamber
@@ -87,27 +85,29 @@ for iters in range(1, args.iterations + 1):
     while (conversationLength < 2 or (conversationLength < args.convlength and
                                       rand.random() > args.stopprob)):
         conversationLength += 1
-        nextWord = learners[conversationLength % 2].getNextWord(
-            conversation, prevWord)
+        nextWord = learners[conversationLength % 2].getNextWord(prevWord)
         conversation.add(nextWord)
         prevWord = nextWord
-        print("    Talked about {:d} words. Latest is '{:s}'".format(
+        print("    Talked about {:d} words. Latest is '{:d}'".format(
             conversationLength, nextWord))
 
-    convs.append(conversation)
+    convs.append(list(conversation))
 
     if (iters % args.inferencesteps == 0):
 
         up1 = learners[0].updateRepresentation(convs)
         up2 = learners[1].updateRepresentation(convs)
 
+        print("    Non zero counts for both learners: {:d}, {:d}".format(
+            learners[0].non_zero_counts, learners[1].non_zero_counts))
+
         convs.clear()
         print("    Updated representation for learners.")
 
         print("    Calculating distance matrices at: {:d}.".format(iters))
 
-        dist1 = learners[0].getDistanceMatrix(vocab)
-        dist2 = learners[1].getDistanceMatrix(vocab)
+        dist1 = learners[0].getDistanceMatrix()
+        dist2 = learners[1].getDistanceMatrix()
         print("    Got distance matrices.")
 
         f1 = open(
@@ -119,8 +119,8 @@ for iters in range(1, args.iterations + 1):
             ('.learner2.{0:0=2d}.tsv'.format(iters // args.inferencesteps)),
             "w")
 
-        f1.write(printDictionary(dist1, vocab))
-        f2.write(printDictionary(dist2, vocab))
+        f1.write(printDictionary(dist1))
+        f2.write(printDictionary(dist2))
 
         print("    Printed distance matrices at: {:d}.".format(iters))
 
