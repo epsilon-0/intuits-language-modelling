@@ -73,10 +73,10 @@ def maxCliqueBronKerbosch(g,A, R,P,X):
        # print A[vertex][0][0]
        # print "======"
         #print vertex
-        Pnew = [val for val in P if (A[vertex][val][0]>0 and val != vertex)] # intersection of P and neighbors of vertex
+        Pnew = [val for val in P if (A[vertex][val][0]!=0 and val != vertex)] # intersection of P and neighbors of vertex
         #print "P<" , P
         #print "Pnew", Pnew
-        Xnew = [val for val in X if (A[vertex][val][0]>0 and val != vertex)] # intersection of X and neighbors of vertex
+        Xnew = [val for val in X if (A[vertex][val][0]!=0 and val != vertex)] # intersection of X and neighbors of vertex
         maxCliqueBronKerbosch(g,A, Rnew,Pnew,Xnew) # run a new iteration over a different recursion
         # for the P
         P.remove(vertex) # remove removes the first matching value
@@ -88,20 +88,28 @@ def N(v, g):
 counter = 0
 def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest cliques... gives at least 1 not-largest-lclique
     global counter
+    #with pivots
     # both P and X are iterators, any = or. If not( P or X) = not P and not X (both empty)
     #if not a.any((P, X)): 
 
     if not ( any(P) or any(X)):
         print "R<", R
-        yield R
+        yield R # R is the maximal clique, if X is empty and P is empty 
         #yield R # return iterator of R
-    for v in P[:]:
+        return # need this return (otherwise, XuP[0] might not point to anything)
+    XuP = list(set().union(X,P))
+    print "xup", XuP
+    pivot = XuP[0]
+    pivs = [v1 for v1 in P if (v1 not in N(pivot, A))]
+    for v in pivs:
         R_v = R + [v]
         #print "P", P
+
+        # P intersects with neighbors of v
         P_v = [v1 for v1 in P if (v1 in N(v, A))] # important! do not include self edges
         #print "PV", P_v
         X_v = [v1 for v1 in X if (v1 in N(v, A))]
-        
+        bronk2(A,R_v,P_v,X_v)
         for r in bronk2(A, R_v, P_v, X_v):
             yield r
 
@@ -109,6 +117,35 @@ def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest c
         X.append(v)
         # print "P is ", P
        # print "new P is", P
+'''
+def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest cliques... gives at least 1 not-largest-lclique
+    global counter
+    # both P and X are iterators, any = or. If not( P or X) = not P and not X (both empty)
+    #if not a.any((P, X)): 
+
+    if not ( any(P) or any(X)):
+        print "R<", R
+        yield R # R is the maximal clique, if X is empty and P is empty 
+        #yield R # return iterator of R
+    pivot = P[np.random.randint(0,len(P))] # choose a pivot vertex in P U X
+    
+    for v in P[:]:
+        R_v = R[:] + [v]
+        #print "P", P
+
+        # P intersects with neighbors of v
+        P_v = [v1 for v1 in P if (v1 in N(v, A))] # important! do not include self edges
+        #print "PV", P_v
+        X_v = [v1 for v1 in X if (v1 in N(v, A))]
+        bronk2(A,R_v,P_v,X_v)
+        for r in bronk2(A, R_v, P_v, X_v):
+            yield r
+
+        P.remove(v)
+        X.append(v)
+        # print "P is ", P
+       # print "new P is", P
+'''
         
 A =nx.to_numpy_recarray(M)
 print A
@@ -116,13 +153,16 @@ print A[0]
 print A[0][0]
 print N(1,A)
 print "===="
+print "range is ", range(6)
+for bf in xrange(len(A[0])):
+    print "Neighbors" , bf, N(bf, A)
 print list(bronk2(A, [],range(6),[]))
+
 graph = [[0,1,0,0,1,0],[1,0,1,0,1,0],[0,1,0,1,0,0],[0,0,1,0,1,1],[1,1,0,1,0,0],[0,0,0,1,0,0]]
 print list(bronk2(graph, [], range(len(graph[0])), []))
 gg = np.matrix(graph)
 ggg = nx.from_numpy_matrix(gg)
 nx.draw(ggg, with_labels = True)
-#nx.draw_networkx_nodes(ggg,pos=nx.spring_layout(ggg))
 plt.show()
 
  # R is nodes it must have, P is edges it may have, X is edges it can't have
