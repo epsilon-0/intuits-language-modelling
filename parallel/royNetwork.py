@@ -4,8 +4,6 @@ import numpy as np
 import random
 import heapq
 
-
-
 def getRandEdges(g, n): # in graph g, get n random edges
     visited = set()
     results = []
@@ -28,12 +26,6 @@ def isInClique(g, n, Ns):
     return True
 
 def N(v, g):
-    # returns index i, if n_v (neighbor of v) is in the list of g[v] (includes itself)
-#    print "Neighbors of ", v
-#    print g[v]
-#    print list(enumerate(g[v]))
-#    print list([i for i, n_v in enumerate(g[v]) if (n_v and i!= v)])
-
     return [i for i, n_v in enumerate(g[v]) if (n_v and i!= v)] # enumerate = list from an iterator
 counter = 0
 def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest cliques... gives at least 1 not-largest-lclique
@@ -109,6 +101,52 @@ def conversation(g,heapCliques, cliquesTalking, peopleTalking, allCliques):
             birthClique(g, c)
             return
 '''
+def disjointCovers(covers, n, sizeMin, sizeMax):
+    # n total nodes
+    # returns list of covers between the range sizeMin to SizeMax, which are disjoint
+    
+    ret = []
+    used = np.zeros(n)
+    for i in xrange(len(covers)):
+        ind = np.random.randint(0,len(covers))
+        size = len(covers[ind])
+        if(size< sizeMin):
+            continue
+        disjoint = True
+        for a in xrange(len(covers[ind])):
+            if(used[covers[ind][a]] ==1):
+                disjoint = False
+        if (disjoint== True):
+            if(sizeMax < len(covers[ind])):
+                asd = []
+                count = 0
+                while(count <sizeMax):
+                    ind2 = np.random.randint(0,len(covers[ind]))
+                    if(used[covers[ind][ind2]] == 0):
+                        asd.append(covers[ind][ind2])
+                        used[covers[ind][ind2]] = 1
+                        count +=1
+                ret.append(asd)
+            else:
+                for b in xrange(len(covers[ind])):
+                    used[covers[ind][b]] = 1
+                ret.append(covers[ind])
+    return ret
+        
+    return 1
+def initializeLearners(n):
+    #for Abhinav, MAKE SOME KIND OF DATA STRUCTURE THAT CAN BE USED IN THE FOLLOWING METHOD(LEARNERS), IN ORDER
+    # TO REFERENCE THE LEARNERS. NOT FROM SCRATCH ANYMORE.
+    # FIRST, we need to make random learners, then we need to read/update from the existing ones
+    return 1
+def learnerProcess(listOfLearners, Ntalks):
+    #FOR ABHINAV.
+    #ListOfLiearners = list of indices of learners
+    #Ntalks is the number of talks for a single conversation amongst the learners
+    # PLEASE WRITE THE CODE THAT WILL take the list of learners, then have a group wide conversation with them
+    # will have Nconversations (#) conversations, and then update 
+    return 1
+
 n  = 10 # people
 p = .4
 seed = 1
@@ -117,25 +155,45 @@ seed = 1
 graphE = nx.erdos_renyi_graph(n,p)
 peopleTalking = np.zeros(n)
 for i in xrange(n):
-    graphE.node[i]['marked']= 0
+    graphE.node[i]['marked']= 0 #irrelevant
 graphAdj = np.array(nx.to_scipy_sparse_matrix(graphE).todense())
-#nx.convert_matrix.to_numpy_recarray(graphE)
-#graphAdj = np.array(nx.adjacency_matrix(graphE))
 print graphAdj
-#nx.convert_matrix.to_numpy_matrix(graphE)
-
-print "===== \n \n \n"
 
 allCliques = list(bronk2(graphAdj, [], range(n), []))
-print allCliques
-cliqueConversations = np.zeros(len(allCliques))
-heapQuietCliques = []# heap cliques is a heap of indices (from allCliques) of cliques not talking
-for i in xrange(0, len(allCliques)):
-    heapq.heappush(heapQuietCliques ,i)
+#print allCliques
+conversationsToHave = disjointCovers(allCliques,len(graphAdj[0]), 0, 2)
 
-cliquesTalking = 0
+print "size of disjoint conversations to have", len(conversationsToHave)
+'''
+for i in xrange(0, 10):
+    print disjointCovers(allCliques,len(graphAdj[0]), 0, 2)
+'''
+
+
+
+talksPerConversation  = 200
+numConversations  = 10
+conversationMin =2
+groupConversationMax = 3
+
+initializeLearners(n)
+allCliques = list(bronk2(graphAdj, [], range(n), []))
+for t in xrange (0, numConversations):
+    print "conversation ", t 
+    conversationsToHave = disjointCovers(allCliques,len(graphAdj[0]), conversationMin, groupConversationMax) # this is slightly randomized process to generate
+#a set of disjoint covers 
+    print conversationsToHave
+    for i in xrange(0, len(conversationsToHave)):
+        learnerProcess(conversationsToHave[i], talksPerConversation) #abhinav code
 nx.draw(graphE, with_labels = True)
 plt.show()
+
+
+
+
+
+
+
 ###Working here now:
 ### have conversation (run code for convergence, and update reps), and then kill clique after
 
@@ -152,7 +210,14 @@ plt.show()
 #IGNORE:
 
 
+''' OTHER
+cliqueConversations = np.zeros(len(allCliques))
+heapQuietCliques = []# heap cliques is a heap of indices (from allCliques) of cliques not talking
+for i in xrange(0, len(allCliques)):
+    heapq.heappush(heapQuietCliques ,i)
 
+cliquesTalking = 0
+'''
 
 
 #graphAdj = nx.to_numpy_recarray(graphE, dtype=[('weight',float),('marked',int)]) ) # adjacency matrix of graph
