@@ -1,0 +1,16 @@
+Two processes we need to cover:
+
+1. Process of conversations and learning
+
+2. Process of measuring distances using TDA
+
+
+Process 1.
+	On central node: create graph G.
+	get a list of n disjoint pairwise/groupwise pairs/groups of learners that can communicate. (Take probability, through edge weights into account)
+	
+	Move learners onto n different compute nodes. Load information from central memory to individual nodes. 
+	Run learner code (on individual cores with individual memories)
+	Offload learner code back to central node (group memory)
+Process 2:
+	Run pairwise TDA for each time step. This can be done something like each compute cluster does a single time step. This is a huge operation p^2/2 * T. Where p is learners, and T is time steps.
