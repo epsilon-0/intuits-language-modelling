@@ -157,7 +157,7 @@ def disjointCovers(covers, n, sizeMin, sizeMax):
     return 1
 
 
-h
+
 
 
 def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
