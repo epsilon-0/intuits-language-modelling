@@ -4,11 +4,12 @@ import numpy as np
 import random
 import heapq
 
-def getRandEdges(g, n): # in graph g, get n random edges
+
+def getRandEdges(g, n):  # in graph g, get n random edges
     visited = set()
     results = []
     edges = random.sample(g.edges(), n)
-    print edges
+    print(edges)
     for edge in edges:
         if edge[0] in visited or edge[1] in visited:
             continue
@@ -18,28 +19,37 @@ def getRandEdges(g, n): # in graph g, get n random edges
         visited.update(edge)
     return results
 
+
 def isInClique(g, n, Ns):
     # is n in the clique of Ns
-    for i in xrange(len(Ns)):
-        if(not g.has_edge(Ns[i], n)):
+    for i in range(len(Ns)):
+        if (not g.has_edge(Ns[i], n)):
             return False
     return True
 
+
 def N(v, g):
-    return [i for i, n_v in enumerate(g[v]) if (n_v and i!= v)] # enumerate = list from an iterator
+    return [i for i, n_v in enumerate(g[v])
+            if (n_v and i != v)]  # enumerate = list from an iterator
+
+
 counter = 0
-def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest cliques... gives at least 1 not-largest-lclique
+
+
+def bronk2(
+        A, R, P, X
+):  # for some reason, this does not give ONLY the largest cliques... gives at least 1 not-largest-lclique
     global counter
     #with pivots
     # both P and X are iterators, any = or. If not( P or X) = not P and not X (both empty)
-    #if not a.any((P, X)): 
+    #if not a.any((P, X)):
 
-    if not ( any(P) or any(X)):
-    #    print "R<", R
-        yield R # R is the maximal clique, if X is empty and P is empty 
+    if not (any(P) or any(X)):
+        #    print "R<", R
+        yield R  # R is the maximal clique, if X is empty and P is empty
         #yield R # return iterator of R
-        return # need this return (otherwise, XuP[0] might not point to anything)
-    XuP = list(set().union(X,P))
+        return  # need this return (otherwise, XuP[0] might not point to anything)
+    XuP = list(set().union(X, P))
     #print "xup", XuP
     pivot = XuP[0]
     pivs = [v1 for v1 in P if (v1 not in N(pivot, A))]
@@ -48,151 +58,189 @@ def bronk2(A, R, P, X): # for some reason, this does not give ONLY the largest c
         #print "P", P
 
         # P intersects with neighbors of v
-        P_v = [v1 for v1 in P if (v1 in N(v, A))] # important! do not include self edges
+        P_v = [v1 for v1 in P
+               if (v1 in N(v, A))]  # important! do not include self edges
         #print "PV", P_v
         X_v = [v1 for v1 in X if (v1 in N(v, A))]
-        bronk2(A,R_v,P_v,X_v)
+        bronk2(A, R_v, P_v, X_v)
         for r in bronk2(A, R_v, P_v, X_v):
             yield r
         P.remove(v)
         X.append(v)
 
+
 def killClique(g, i, heapCliques, peopleTalking, allCliques):
-    cliquesTalking -=1
+    cliquesTalking -= 1
     cliqueConversations[i] = 0
-    for b in xrange(allCliques[i]):
+    for b in range(allCliques[i]):
         peopleTalking[i] = 0
-    heapq.heappush(heapCliques,i)
+    heapq.heappush(heapCliques, i)
 
     for a in allCliques[i]:
-        g.node[allCliques[i][a]]['marked']= 0
+        g.node[allCliques[i][a]]['marked'] = 0
 
-def birthClique(g,i, peopleTalking, allCliques):
-    cliquesTalking +=1
+
+def birthClique(g, i, peopleTalking, allCliques):
+    cliquesTalking += 1
     cliqueConversations[i] = 1
     for a in allCliques[i]:
         peopleTalking[i] = 1
-       # g.node[allCliques[i][a]]['marked']= 1
-def everyoneQuiet(g, peopleTalking,clique):
-    for i in xrange(len(clique)):
-        if(peopleTalking[clique[i]] >0):
+
+
+    # g.node[allCliques[i][a]]['marked']= 1
+def everyoneQuiet(g, peopleTalking, clique):
+    for i in range(len(clique)):
+        if (peopleTalking[clique[i]] > 0):
             return False
     return True
-def conversation(g,heapCliques, cliquesTalking, peopleTalking, allCliques):
+
+
+def conversation(g, heapCliques, cliquesTalking, peopleTalking, allCliques):
     # heap cliques is a heap of indices (from allCliques) of cliques not talking
     #cliques talking is a list of all the cliques that have people talking
     cliq = []
     ind = -1
-    if(cliquesTalking >= len(allCliques)):
+    if (cliquesTalking >= len(allCliques)):
         return -1
-    while(len(heapCliques) > 0):
-        tempInd= heapq.heappop(heapCliques)
-        if(everyoneQuiet(g,peopleTalking,allCliques[tempInd])):
-            ind  =tempInd
-    birthClique(g, ind,peopleTalking, allCliques)
+    while (len(heapCliques) > 0):
+        tempInd = heapq.heappop(heapCliques)
+        if (everyoneQuiet(g, peopleTalking, allCliques[tempInd])):
+            ind = tempInd
+    birthClique(g, ind, peopleTalking, allCliques)
     return i
+
+
 '''
     r = np.random.randomint(0, len(allCliques)-cliquesTalking)
     count = 0
-    for i in xrange(len(allCliques)):
+    for i in range(len(allCliques)):
         if(allCliques[i]==0):
             count+=1
         if(count == r):
             birthClique(g, c)
             return
 '''
+
+
 def disjointCovers(covers, n, sizeMin, sizeMax):
     # n total nodes
     # returns list of covers between the range sizeMin to SizeMax, which are disjoint
-    
+
     ret = []
     used = np.zeros(n)
-    for i in xrange(len(covers)):
-        ind = np.random.randint(0,len(covers))
+    for i in range(len(covers)):
+        ind = np.random.randint(0, len(covers))
         size = len(covers[ind])
-        if(size< sizeMin):
+        if (size < sizeMin):
             continue
         disjoint = True
-        for a in xrange(len(covers[ind])):
-            if(used[covers[ind][a]] ==1):
+        for a in range(len(covers[ind])):
+            if (used[covers[ind][a]] == 1):
                 disjoint = False
-        if (disjoint== True):
-            if(sizeMax < len(covers[ind])):
+        if (disjoint == True):
+            if (sizeMax < len(covers[ind])):
                 asd = []
                 count = 0
-                while(count <sizeMax):
-                    ind2 = np.random.randint(0,len(covers[ind]))
-                    if(used[covers[ind][ind2]] == 0):
+                while (count < sizeMax):
+                    ind2 = np.random.randint(0, len(covers[ind]))
+                    if (used[covers[ind][ind2]] == 0):
                         asd.append(covers[ind][ind2])
                         used[covers[ind][ind2]] = 1
-                        count +=1
+                        count += 1
                 ret.append(asd)
             else:
-                for b in xrange(len(covers[ind])):
+                for b in range(len(covers[ind])):
                     used[covers[ind][b]] = 1
                 ret.append(covers[ind])
     return ret
-        
+
     return 1
+
+
 def initializeLearners(n):
     #for Abhinav, MAKE SOME KIND OF DATA STRUCTURE THAT CAN BE USED IN THE FOLLOWING METHOD(LEARNERS), IN ORDER
     # TO REFERENCE THE LEARNERS. NOT FROM SCRATCH ANYMORE.
     # FIRST, we need to make random learners, then we need to read/update from the existing ones
     return 1
-def learnerProcess(listOfLearners, Ntalks):
-    #FOR ABHINAV.
-    #ListOfLiearners = list of indices of learners
-    #Ntalks is the number of talks for a single conversation amongst the learners
-    # PLEASE WRITE THE CODE THAT WILL take the list of learners, then have a group wide conversation with them
-    # will have Nconversations (#) conversations, and then update 
+
+
+def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
+    # listOfLearners is going to be a list of actual VecspaceLearners
+    # passed by reference
+    # Ntalks - number of conversations to have
+    # convlength - max length of any conversation
+    # stopprob - stopping probability of conversation at any stage
+    convs = []
+
+    vocab = range(listOfLearners[0].voc_size)
+
+    for iters in range(Ntalks):
+        print("In Learning iteration {:d}.".format(iters))
+
+        conversation = set()
+        topic = np.random.choice(vocab)
+        conversation.add(topic)
+
+        conversationLength = 0
+
+        prevWord = topic
+
+        while (conversationLength < 2 or (conversationLength < convlength and
+                                          np.random.random() > stopprob)):
+            conversationLength += 1
+            nextLearner = np.random.choice(len(listOfLearners))
+            nextWord = listOfLearners[nextLearner].getNextWord(prevWord)
+            conversation.add(nextWord)
+
+        convs.append(list(conversation))
+
+    for i in range(len(listOfLearners)):
+        listOfLearners[i].updateRepresentation(convs)
+
     return 1
 
-n  = 10 # people
+
+n = 10  # people
 p = .4
 seed = 1
 # graph Erdos
 #graphE = nx.generators.fast_gnp_random_graph(n,p,seed, directed = False)
-graphE = nx.erdos_renyi_graph(n,p)
+graphE = nx.erdos_renyi_graph(n, p)
 peopleTalking = np.zeros(n)
-for i in xrange(n):
-    graphE.node[i]['marked']= 0 #irrelevant
+for i in range(n):
+    graphE.node[i]['marked'] = 0  #irrelevant
 graphAdj = np.array(nx.to_scipy_sparse_matrix(graphE).todense())
-print graphAdj
+print(graphAdj)
 
 allCliques = list(bronk2(graphAdj, [], range(n), []))
 #print allCliques
-conversationsToHave = disjointCovers(allCliques,len(graphAdj[0]), 0, 2)
+conversationsToHave = disjointCovers(allCliques, len(graphAdj[0]), 0, 2)
 
-print "size of disjoint conversations to have", len(conversationsToHave)
+print("size of disjoint conversations to have", len(conversationsToHave))
 '''
-for i in xrange(0, 10):
+for i in range(0, 10):
     print disjointCovers(allCliques,len(graphAdj[0]), 0, 2)
 '''
 
-
-
-talksPerConversation  = 200
-numConversations  = 10
-conversationMin =2
+talksPerConversation = 200
+numConversations = 10
+conversationMin = 2
 groupConversationMax = 3
 
 initializeLearners(n)
 allCliques = list(bronk2(graphAdj, [], range(n), []))
-for t in xrange (0, numConversations):
-    print "conversation ", t 
-    conversationsToHave = disjointCovers(allCliques,len(graphAdj[0]), conversationMin, groupConversationMax) # this is slightly randomized process to generate
-#a set of disjoint covers 
-    print conversationsToHave
-    for i in xrange(0, len(conversationsToHave)):
-        learnerProcess(conversationsToHave[i], talksPerConversation) #abhinav code
-nx.draw(graphE, with_labels = True)
+for t in range(0, numConversations):
+    print("conversation ", t)
+    conversationsToHave = disjointCovers(
+        allCliques, len(graphAdj[0]), conversationMin, groupConversationMax
+    )  # this is slightly randomized process to generate
+    #a set of disjoint covers
+    print(conversationsToHave)
+    for i in range(0, len(conversationsToHave)):
+        learnerProcess(conversationsToHave[i],
+                       talksPerConversation)  #abhinav code
+nx.draw(graphE, with_labels=True)
 plt.show()
-
-
-
-
-
-
 
 ###Working here now:
 ### have conversation (run code for convergence, and update reps), and then kill clique after
@@ -204,21 +252,15 @@ plt.show()
 #nx.draw(G)
 #plt.show()
 
-
-
-
 #IGNORE:
-
-
 ''' OTHER
 cliqueConversations = np.zeros(len(allCliques))
 heapQuietCliques = []# heap cliques is a heap of indices (from allCliques) of cliques not talking
-for i in xrange(0, len(allCliques)):
+for i in range(0, len(allCliques)):
     heapq.heappush(heapQuietCliques ,i)
 
 cliquesTalking = 0
 '''
-
 
 #graphAdj = nx.to_numpy_recarray(graphE, dtype=[('weight',float),('marked',int)]) ) # adjacency matrix of graph
 '''
@@ -230,7 +272,7 @@ print A[0][0]
 print N(1,A)
 print "===="
 print "range is ", range(6)
-for bf in xrange(len(A[0])):
+for bf in range(len(A[0])):
     print "Neighbors" , bf, N(bf, A)
 print list(bronk2(A, [],range(6),[]))
 
@@ -242,13 +284,12 @@ nx.draw(ggg, with_labels = True)
 plt.show()
 
 '''
-
 '''
 
 G = nx.generators.wheel_graph(10)#nx.generators.fast_gnp_random_graph(n,p,seed, directed = False)
 #pos = nx.spring_layout(G)
 #print G.edges()
-for i in xrange(n):
+for i in range(n):
     G.node[i]['marked']= 0
 A = np.matrix([[1,1,1,1,1,0],[1,1,1,1,1,0],[1,1,1,1,1,0],[1,1,1,1,1,0],[1,1,1,1,1,1], [0,0,0,0,1,1]])
 M = nx.from_numpy_matrix(A)
@@ -261,7 +302,7 @@ def maxCliqueBronKerbosch(g,A, R,P,X):
     # X is the nodes you do not want to add to the clique
 
     if(len(P)==0 and len(X)==0):
-        return R    
+        return R
     for vertex in P[:]:  # iterates of vertices in P
        # print "==" , vertex
         Rnew = R + [vertex]
@@ -282,9 +323,3 @@ def maxCliqueBronKerbosch(g,A, R,P,X):
         X.append(vertex) # append adds the vertex to the list
 
 '''
-
-
-
-
-
-
