@@ -30,15 +30,15 @@ def squaredNorm(corpus, dimension=50, num_iters=100, step_size=0.001):
         for i in range(num_vectors):
             for j in range(num_vectors):
                 if (corpus[i][j] > 0):
-                    answer += np.min([
-                        corpus[i][j], 150
-                    ]) * (np.log(1 + corpus[i][j]) - np.square(
-                        np.linalg.norm(params[i] + params[j])) - params[-1][0])
+                    answer += np.min([corpus[i][j], 150]) * np.square(
+                        (np.log(1 + corpus[i][j]) -
+                         np.square(np.linalg.norm(params[i] + params[j])) -
+                         params[-1][0]))
         return answer
 
-    vectors = np.array(
-        [[2 * np.random.random() / dimension for i in range(dimension)]
-         for j in range(num_vectors)])
+    vectors = np.array([[(4 * np.random.random() - 2) / dimension
+                         for i in range(dimension)]
+                        for j in range(num_vectors)])
     params = np.concatenate(
         [vectors, np.array([[0. for i in range(dimension)]])])
     ograd = grad(optimization)
@@ -55,3 +55,10 @@ def readVecspaceFile(file_name):
     C = float(lines[-1].strip())
     inp.close()
     return (vecspace, C)
+
+
+def writeVecspaceFile(file_name, vecspace, C):
+    opt = open(file_name, "w")
+    opt.write("\n".join(["\t".join(map(str, i)) for i in vecspace]))
+    opt.write("\n" + str(C))
+    return

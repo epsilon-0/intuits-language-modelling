@@ -14,7 +14,7 @@ class VecspaceLearner():
         self.counts = np.array([[0. for i in range(self.voc_size)]
                                 for j in range(self.voc_size)])
         self.non_zero_counts = 0
-        self.calculateZ()
+        self.Z = self.calculateZ()
         return
 
     def calculateZ(self, iters=30):
@@ -27,7 +27,7 @@ class VecspaceLearner():
             for vec in self.vecspace:
                 Zc += np.exp(np.dot(context, vec))
                 total_z += Zc
-        self.Z = total_z / iters
+        return total_z / iters
 
     def getPairCount(self, w1, w2):
         # gets the value of X(w1, w2)
@@ -74,8 +74,8 @@ class VecspaceLearner():
                 if (self.counts[i][j] != 0):
                     answer += np.min([
                         self.counts[i][j], 150
-                    ]) * (np.log(1 + self.counts[i][j]) - np.square(
-                        np.linalg.norm(params[i] + params[j])) - params[-1][0])
+                    ]) * np.square((np.log(1 + self.counts[i][j]) - np.square(
+                        np.linalg.norm(params[i] + params[j])) - params[-1][0]))
         return answer
 
     def updateRepresentation(self, conversations):
