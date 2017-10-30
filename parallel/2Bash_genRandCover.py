@@ -14,29 +14,15 @@ FileToRead = sys.argv[4] # read where the "All cliques are"
 FileToWrite = sys.argv[5] # write a file for Abhinav, which is a list of disjoint covers
 seed = 1
 allCliques = []
-def readcliques():
-	with open(FileToRead) as f:
-	    stringCliques = f.read().splitlines()
-	for i in xrange(0 , len(stringCliques)):
-		if not stringCliques[i]:
-			continue
-		print stringCliques[i]
 
-		allCliques.append([])
-		temp = stringCliques[i].split(",")
-		#print temp
-		#allCliques.append(list(map(temp, int)))
 
-	print stringCliques
-	print allCliques
 with open(FileToRead, "rb") as new_filename:
 	allCliques = pickle.load(new_filename)
 print allCliques
 
 def read(nameTxt):
 	return np.loadtxt(nameTxt)
-
-
+	
 def disjointCovers(covers, n, sizeMin, sizeMax):
     # n total nodes
     # returns list of covers between the range sizeMin to SizeMax, which are disjoint
@@ -72,3 +58,22 @@ def disjointCovers(covers, n, sizeMin, sizeMax):
 
 print disjointCovers(allCliques, n, minGroup,maxGroup)
 
+
+
+'''
+def readcliques():
+	with open(FileToRead) as f:
+	    stringCliques = f.read().splitlines()
+	for i in xrange(0 , len(stringCliques)):
+		if not stringCliques[i]:
+			continue
+		print stringCliques[i]
+
+		allCliques.append([])
+		temp = stringCliques[i].split(",")
+		#print temp
+		#allCliques.append(list(map(temp, int)))
+
+	print stringCliques
+	print allCliques
+'''
