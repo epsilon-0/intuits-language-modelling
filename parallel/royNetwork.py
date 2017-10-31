@@ -157,11 +157,7 @@ def disjointCovers(covers, n, sizeMin, sizeMax):
     return 1
 
 
-def initializeLearners(n):
-    #for Abhinav, MAKE SOME KIND OF DATA STRUCTURE THAT CAN BE USED IN THE FOLLOWING METHOD(LEARNERS), IN ORDER
-    # TO REFERENCE THE LEARNERS. NOT FROM SCRATCH ANYMORE.
-    # FIRST, we need to make random learners, then we need to read/update from the existing ones
-    return 1
+
 
 
 def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
