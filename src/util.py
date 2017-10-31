@@ -47,6 +47,42 @@ def squaredNorm(corpus, dimension=50, num_iters=100, step_size=0.001):
     return (new_params[:-1], new_params[-1][0])
 
 
+def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
+    # listOfLearners is going to be a list of actual VecspaceLearners
+    # passed by reference
+    # Ntalks - number of conversations to have
+    # convlength - max length of any conversation
+    # stopprob - stopping probability of conversation at any stage
+    convs = []
+
+    vocab = range(listOfLearners[0].voc_size)
+
+    for iters in range(Ntalks):
+        print("In Learning iteration {:d}.".format(iters))
+
+        conversation = set()
+        topic = np.random.choice(vocab)
+        conversation.add(topic)
+
+        conversationLength = 0
+
+        prevWord = topic
+
+        while (conversationLength < 2 or (conversationLength < convlength and
+                                          np.random.random() > stopprob)):
+            conversationLength += 1
+            nextLearner = np.random.choice(len(listOfLearners))
+            nextWord = listOfLearners[nextLearner].getNextWord(prevWord)
+            conversation.add(nextWord)
+
+        convs.append(list(conversation))
+
+    for i in range(len(listOfLearners)):
+        listOfLearners[i].updateRepresentation(convs)
+
+    return 1
+
+
 def readVecspaceFile(file_name):
     inp = open(file_name, "r")
     lines = inp.readlines()
