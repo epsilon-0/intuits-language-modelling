@@ -73,9 +73,11 @@ write(FileToPrint,graphAdj)
 s = FileToPrint + "bronk" + ".txt"
 #thefile = open(s, 'w')
 
-allCliques = list(bronk2(graphAdj, [], range(n), []))
-with open(s, "w") as internal_filename:
-	pickle.dump(allCliques, internal_filename)
+allCliques = list(bronk2(graphAdj, [], list(range(n)), []))
+
+fId = open(s, "w")
+fId.write("\n".join(["\t".join(map(str, i)) for i in allCliques]))
+fId.close()
 
 
 #for item in allCliques:

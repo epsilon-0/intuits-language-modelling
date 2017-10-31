@@ -4,25 +4,29 @@ import numpy as np
 import random
 import sys
 import csv
-import pickle 
+import pickle
+
 # takes 4 arguments
 # number of people, prob of connection, and where to read from, where to write to, for Abhi part
 n = int(sys.argv[1])
-minGroup = int(sys.argv[2])# 10  # people
+minGroup = int(sys.argv[2])  # 10  # people
 maxGroup = int(sys.argv[3])
-FileToRead = sys.argv[4] # read where the "All cliques are"
-FileToWrite = sys.argv[5] # write a file for Abhinav, which is a list of disjoint covers
+FileToRead = sys.argv[4]  # read where the "All cliques are"
+FileToWrite = sys.argv[
+    5]  # write a file for Abhinav, which is a list of disjoint covers
 seed = 1
 allCliques = []
 
+with open(FileToRead, "r") as new_filename:
+    lines = new_filename.readlines()
+    allCliques = [list(map(int, i.strip().split("\t"))) for i in lines]
+print(allCliques)
 
-with open(FileToRead, "rb") as new_filename:
-	allCliques = pickle.load(new_filename)
-print allCliques
 
 def read(nameTxt):
-	return np.loadtxt(nameTxt)
-	
+    return np.loadtxt(nameTxt)
+
+
 def disjointCovers(covers, n, sizeMin, sizeMax):
     # n total nodes
     # returns list of covers between the range sizeMin to SizeMax, which are disjoint
@@ -56,10 +60,7 @@ def disjointCovers(covers, n, sizeMin, sizeMax):
     return ret
 
 
-print disjointCovers(allCliques, n, minGroup,maxGroup)
-
-
-
+print(disjointCovers(allCliques, n, minGroup, maxGroup))
 '''
 def readcliques():
 	with open(FileToRead) as f:
