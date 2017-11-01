@@ -1,8 +1,27 @@
-# args : number of people, p, where to write
-# initializes graph, and generates the cliques
-python generate_Graph.py --n=10 --p=.4 --adjFile="../output/graph.adj" --cliqueFile="../output/cliques.txt"
+#!/bin/bash
 
-#args : number of people, mingroup size, max group size, where to read the all cliques, where to write the covers to(for abhinav to work on)
-# generate a disjioint rand cover, and output the output to "COVER.txt"
-python 2Bash_genRandCover.py 10 0 4 "../output/cliques.txt" "Cover.Txt"
-#CURRENTLY, does not write to cover.txt
+RANDOM=42
+
+n=10  # number of people
+p=0.2 # density of graph
+mn=2  # minimum size of clique
+mx=2  # maximum size of clique
+
+# initializes graph, and generates the cliques
+python generate_graph.py --n=$n --p=$p --adjFile="../output/graph.adj" --cliqueFile="../output/cliques.txt"
+
+# outputs random list of covers of the graph to do conversations
+function generate_covers {
+    python generate_random_cover.py --n=$n --mn=$mn --mx=$mx --rFile="../output/cliques.txt" --wFile="temp" --seed=$1
+}
+
+workingDirectory="."
+numberOfTimesteps=10
+
+for ((i=1;i<$numberOfTimesteps;i+=1))
+do
+    echo $i
+    rand=$RANDOM
+    time output=$(generate_covers $rand)
+    readarray lines <<<"$output"
+done

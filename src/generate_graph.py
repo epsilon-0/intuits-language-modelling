@@ -7,9 +7,9 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     '--seed', metavar='r', type=int, default=42, help='seed for randomness')
 parser.add_argument(
-    '--n', metavar='n', type=int, default=42, help='size of the network')
+    '--n', metavar='n', type=int, default=100, help='size of the network')
 parser.add_argument(
-    '--p', metavar='p', type=int, default=42, help='density of the network')
+    '--p', metavar='p', type=float, default=0.1, help='density of the network')
 parser.add_argument(
     '--adjFile',
     metavar='f',
@@ -24,7 +24,7 @@ parser.add_argument(
     help='File to print the maximal cliques')
 args = parser.parse_args()
 
-graph = nx.erdos_renyi_graph(args.n, args.p, args.seed)
+graph = nx.erdos_renyi_graph(args.n, args.p, seed=args.seed)
 
 nx.write_adjlist(graph, args.adjFile)
 
