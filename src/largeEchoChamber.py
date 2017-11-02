@@ -48,12 +48,12 @@ writeNames = [args.writeDirectory + "/" + i for i in learnerNumbers]
 
 learners = []
 
-#for i in readNames:
-#    inp = readVecspaceFile(i)
-#    learners.append(VecspaceLearner(inp[0], inp[1]))
+for i in readNames:
+    inp = readVecspaceFile(i)
+    learners.append(VecspaceLearner(inp[0], inp[1]))
 
-#learnerProcess(
-#    learners, Ntalks=args.numConversations, convlength=args.convLength)
+learnerProcess(
+    learners, Ntalks=args.numConversations, convlength=args.convLength)
 
-#for i in range(len(writeNames)):
-#    writeVecspaceFile(writeNames[i], learners[i].vecspace, learners[i].C)
+for i in range(len(writeNames)):
+    writeVecspaceFile(writeNames[i], learners[i].vecspace, learners[i].C)

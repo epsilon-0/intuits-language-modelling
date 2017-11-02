@@ -35,8 +35,7 @@ do
     for ((j=1;j<${#lines[@]};j+=1))
     do
         echo $j
-        #srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb
-        python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" &
+        srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" &
     done
     wait
 done
