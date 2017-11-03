@@ -47,7 +47,12 @@ def squaredNorm(corpus, dimension=50, num_iters=100, step_size=0.001):
     return (new_params[:-1], new_params[-1][0])
 
 
-def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
+def learnerProcess(listOfLearners,
+                   Ntalks,
+                   convlength=10,
+                   stopprob=0.2,
+                   num_iters=20,
+                   step_size=0.01):
     # listOfLearners is going to be a list of actual VecspaceLearners
     # passed by reference
     # Ntalks - number of conversations to have
@@ -78,7 +83,8 @@ def learnerProcess(listOfLearners, Ntalks, convlength=10, stopprob=0.2):
         convs.append(list(conversation))
 
     for i in range(len(listOfLearners)):
-        listOfLearners[i].updateRepresentation(convs)
+        listOfLearners[i].updateRepresentation(
+            convs, num_iters=num_iters, step_size=step_size)
 
     return 1
 

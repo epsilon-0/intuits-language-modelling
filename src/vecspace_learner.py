@@ -72,13 +72,14 @@ class VecspaceLearner():
         for i in range(self.voc_size):
             for j in range(i + 1, self.voc_size):
                 if (self.counts[i][j] != 0):
-                    answer += np.min([
-                        self.counts[i][j], 150
-                    ]) * np.square((np.log(1 + self.counts[i][j]) - np.square(
-                        np.linalg.norm(params[i] + params[j])) - params[-1][0]))
+                    answer += np.min([self.counts[i][j], 150]) * np.square(
+                        (np.log(1 + self.counts[i][j]) -
+                         np.square(np.linalg.norm(params[i] + params[j])) -
+                         params[-1][0]))
         return answer
 
-    def updateRepresentation(self, conversations):
+    def updateRepresentation(self, conversations, num_iters=20,
+                             step_size=0.01):
         # update the vecspace using the given conversations
 
         # initialize the current parameters
@@ -97,7 +98,7 @@ class VecspaceLearner():
 
         # get the optimized parameters
         new_params = optimizers.adam(
-            optim_grad, params, num_iters=20, step_size=0.01)
+            optim_grad, params, num_iters=num_iters, step_size=step_size)
 
         # update the parameters
         self.C = new_params[-1][0]

@@ -38,6 +38,18 @@ parser.add_argument(
     type=int,
     default=30,
     help='number of conversations')
+parser.add_argument(
+    '--num_iters',
+    metavar='nt',
+    type=int,
+    default=20,
+    help='number of steps of optimization function')
+parser.add_argument(
+    '--step_size',
+    metavar='st',
+    type=float,
+    default=0.01,
+    help='step size for optimization adam function')
 args = parser.parse_args()
 
 np.random.seed(args.seed)
@@ -53,7 +65,11 @@ for i in readNames:
     learners.append(VecspaceLearner(inp[0], inp[1]))
 
 learnerProcess(
-    learners, Ntalks=args.numConversations, convlength=args.convLength)
+    learners,
+    Ntalks=args.numConversations,
+    convlength=args.convLength,
+    num_iters=args.num_iters,
+    step_size=args.step_size)
 
 for i in range(len(writeNames)):
     writeVecspaceFile(writeNames[i], learners[i].vecspace, learners[i].C)
