@@ -17,7 +17,7 @@ workingDirectory="$1/$(date +%Y%m%d_%H%M%S)"
 
 # for each person make a learner and store it in initial folder
 mkdir -p "$workingDirectory/1"
-for ((i=1;i<=$n;i+=1))
+for ((i=0;i<$n;i+=1))
 do
     # for running on local machine
     # python generate_vecspace_learner.py --seed=$RANDOM --writeFile="$workingDirectory/1/$i"
@@ -47,7 +47,7 @@ do
     do
         # for running on local machine
         # python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" --num_iters=10 --step_size=0.01 &
-        srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" --num_iters=10 --step_size=0.01 &
+        srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" --num_iters=2 --step_size=0.01 &
     done
     wait
 done
