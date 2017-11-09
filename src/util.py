@@ -1,5 +1,6 @@
 import autograd.numpy as np
-from autograd import grad, optimizers
+from autograd import grad
+from autograd.misc import optimizers
 
 
 def printDictionary(dists):
