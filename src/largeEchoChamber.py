@@ -55,6 +55,7 @@ args = parser.parse_args()
 np.random.seed(args.seed)
 
 learnerNumbers = args.learnerNumbers.strip().split("\t")
+print(learnerNumbers)
 readNames = [args.readDirectory + "/" + i for i in learnerNumbers]
 writeNames = [args.writeDirectory + "/" + i for i in learnerNumbers]
 

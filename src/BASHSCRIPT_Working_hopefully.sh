@@ -7,7 +7,7 @@
 #SBATCH --time=01:00:00
 
 module purge
-module load anaconda3/4.3.1
+module load python3/intel/3.6.3
 module load parallel/20171022
 
 envs=$(for e in $(env | grep -v '{' | grep -v '}' | grep -v '()' | grep -v _= | cut -d= -f1); do echo "--env $e"; done)
@@ -69,7 +69,4 @@ do
 	--tmpdir $SLURM_JOB_TMP \
         $envs \
         $nodes
-    
 done
-
-
