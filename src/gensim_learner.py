@@ -14,12 +14,15 @@ sentence_batches = []
 
 
 class SentenceIterator:
+    def __init__(self):
+        self.m = 0
     def __iter__(self):
         return self
 
     def __next__(self):
-        if random.choice([1, 2, 3]) == 3:
+        if self.m > 10:
             raise StopIteration
+        self.m += 1
         return [["cat", "says", "meow"], ["dog", "says", "woof"]]
 
 
