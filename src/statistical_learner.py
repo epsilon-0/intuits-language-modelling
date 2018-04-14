@@ -44,8 +44,8 @@ class StatisticalLearner():
             word_count += (len(conv)*(len(conv)-1))/2
             for i in range(len(conv)):
                 for j in range(i+1, len(conv)):
-                    occurrence_counts[i][j] += 1
-                    occurrence_counts[j][i] += 1
+                    occurrence_counts[conv[i]][conv[j]] += 1
+                    occurrence_counts[conv[j]][conv[i]] += 1
         self.prob_matrix = occurrence_counts / word_count
 
     def getDistanceMatrix(self):
