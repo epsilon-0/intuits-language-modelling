@@ -46,12 +46,8 @@ args = parser.parse_args()
 rand.seed(args.seed)
 
 inp1 = generateRandomCorpus(150, density=0.3)
-sum1 = sum([sum(i) for i in inp1])
-inp1 /= sum1
 
 inp2 = generateRandomCorpus(150, density=0.3)
-sum2 = sum([sum(i) for i in inp2])
-inp2 /= sum2
 
 vocab = len(inp1)
 

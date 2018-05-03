@@ -74,8 +74,8 @@ def learnerProcess(listOfLearners,
 
         prevWord = topic
 
-        while (conversationLength < 2 or (conversationLength < convlength and
-                                          np.random.random() > stopprob)):
+        while (conversationLength < 2 or (conversationLength < convlength
+                                          and np.random.random() > stopprob)):
             conversationLength += 1
             nextLearner = np.random.choice(len(listOfLearners))
             nextWord = listOfLearners[nextLearner].getNextWord(prevWord)
@@ -94,7 +94,8 @@ def readVecspaceFile(file_name):
     inp = open(file_name, "r")
     lines = inp.readlines()
     vecspace = np.array(
-        [list(map(float, i.strip().split("\t"))) for i in lines[:-1]])
+        [list(map(float,
+                  i.strip().split("\t"))) for i in lines[:-1]])
     C = float(lines[-1].strip())
     inp.close()
     return (vecspace, C)
@@ -105,3 +106,47 @@ def writeVecspaceFile(file_name, vecspace, C):
     opt.write("\n".join(["\t".join(map(str, i)) for i in vecspace]))
     opt.write("\n" + str(C))
     return
+
+
+def readStatisticalLearnerFile(file_name):
+    prob_matrix = np.loadtxt(file_name, delimiter='\t')
+    return prob_matrix
+
+
+def writeStatisticalLearnerFile(file_name, prob_matrix):
+    np.savetxt(file_name, prob_matrix, delimiter="\t")
+    return
+
+
+def statisticalLearnerProcess(listOfLearners,
+                              Ntalks,
+                              convlength=10,
+                              stopprob=0.2):
+    convs = []
+
+    vocab = range(listOfLearners[0].voc_size)
+
+    for iters in range(Ntalks):
+        print("In Learning iteration {:d}.".format(iters))
+
+        conversation = set()
+        topic = np.random.choice(vocab)
+        conversation.add(topic)
+
+        conversationLength = 0
+
+        prevWord = topic
+
+        while (conversationLength < 2 or (conversationLength < convlength
+                                          and np.random.random() > stopprob)):
+            conversationLength += 1
+            nextLearner = np.random.choice(len(listOfLearners))
+            nextWord = listOfLearners[nextLearner].getNextWord(prevWord)
+            conversation.add(nextWord)
+
+        convs.append(list(conversation))
+
+    for i in range(len(listOfLearners)):
+        listOfLearners[i].updateRepresentation(convs)
+
+    return 1
