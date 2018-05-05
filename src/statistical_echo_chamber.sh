@@ -12,11 +12,11 @@
 
 RANDOM=42
 
-n=20  # number of people
-p=0.2  # density of graph
+n=40  # number of people
+p=0.6  # density of graph
 mn=2  # minimum size of clique
-mx=6  # maximum size of clique
-numberOfTimesteps=10  # number of total conversations to have
+mx=8  # maximum size of clique
+numberOfTimesteps=80  # number of total conversations to have
 
 workingDirectory="$1/$(date +%Y%m%d_%H%M%S)"
 

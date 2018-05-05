@@ -1,14 +1,22 @@
+import numpy as np
+from scipy.stats import wasserstein_distance
 from numpy.linalg import norm
+N = 20
+time = 15
 d = []
-for i in range(1,11):
+for i in range(1,time+1): # steps (epochs of conversations)
     c = 0.
     x = []
-    for j in range(20):
+    for j in range(N): # number of people
         x.append(np.loadtxt(str(i)+"/"+str(j), delimiter="\t"))
-    for j in range(20):
-        for k in range(j+1, 20):
-            c += norm(x[j] - x[k])
-    d.append(c)
+    for j in range(N):
+        for k in range(j+1, N):
+            m = min(len(x[j]) ,len(x[k]) ) 
+            for z in range(m):
+	            c += wasserstein_distance(x[j][z], x[k][z])
+            #norm_ += norm(x[j] - x[k])
+            c= c/m
+    d.append(c/N)
 
 [163639.299022024,
  128732.83476852979,
