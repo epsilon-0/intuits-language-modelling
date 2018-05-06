@@ -30,19 +30,19 @@ mkdir -p "$workingDirectory/1"
 for ((i=0;i<$n;i+=1))
 do
     # for running on local machine
-    python3 generate_statistical_learner.py --seed=$RANDOM --writeFile="$workingDirectory/1/$i"
-    # srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=1Gb python3 generate_vecspace_learner.py --seed=$RANDOM --writeFile="$workingDirectory/1/$i"
+    #python3 generate_statistical_learner.py --seed=$RANDOM --writeFile="$workingDirectory/1/$i"
+    srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=1Gb python generate_vecspace_learner.py --seed=$RANDOM --writeFile="$workingDirectory/1/$i"
 done
 
 echo "Made initial representations of learners"
 
 # initializes graph, and generates the cliques
 mkdir -p "$workingDirectory/graph"
-python3 generate_graph.py --n=$n --p=$p --adjFile="$workingDirectory/graph/graph.adj" --cliqueFile="$workingDirectory/graph/cliques.txt"
+python generate_graph.py --n=$n --p=$p --adjFile="$workingDirectory/graph/graph.adj" --cliqueFile="$workingDirectory/graph/cliques.txt"
 
 # outputs random list of covers of the graph to do conversations
 function generate_covers {
-    python3 generate_random_cover.py --n=$n --mn=$mn --mx=$mx --rFile="$workingDirectory/graph/cliques.txt" --wFile="temp" --seed=$1
+    python generate_random_cover.py --n=$n --mn=$mn --mx=$mx --rFile="$workingDirectory/graph/cliques.txt" --wFile="temp" --seed=$1
 }
 
 for ((i=1;i<$numberOfTimesteps;i+=1))
@@ -55,8 +55,10 @@ do
     do
         # for running on local machine
         echo "enter in here?"
-        python3 largeStatisticalEchoChamber.py --seed=$RANDOM --numConversations=100 --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" &
-        # srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python3 largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" --num_iters=2 --step_size=0.01 &
+        #python3 largeStatisticalEchoChamber.py --seed=$RANDOM --numConversations=100 --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" &
+        srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python largeStatisticalEchoChamber.py --seed=$RANDOM --numConversations=100 --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" &
+
+       # srun --ntasks=1 --cpus-per-task=1 --exclusive --mem=3Gb python largeEchoChamber.py --seed=$RANDOM --readDirectory="$workingDirectory/$i" --writeDirectory="$workingDirectory/$((i+1))" --learnerNumbers="${lines[$j]}" --num_iters=2 --step_size=0.01 &
     done
     wait
 done
@@ -64,7 +66,7 @@ done
 
 
 
-python3 calculateAverageWasserstein.py "$workingDirectory/" $n $numberOfTimesteps
+python calculateAverageWasserstein.py "$workingDirectory/" $n $numberOfTimesteps
 
 
 
