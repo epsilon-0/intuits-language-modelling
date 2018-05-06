@@ -23,18 +23,18 @@ Ts=( 50, 100, 200 )
 
 
 ns=( 20, 40, 100, 200 )
-#ns=( 20)
+ns=( 20)
 
 mns=( 2)
 
 mxs=(4, 6, 10, 16)
-#mxs=(8)
+mxs=(8)
 
 ps=( 2, 10, 15, 30, 50, 60, 100 )
-#ps=( 50)
+ps=( 50)
 
 Ts=( 100, 500, 1000 )
-#Ts=( 10 )
+Ts=( 10 )
 #workingDirectory="simulation/hello"
 SCRIPT_PATH="./statistical_echo_chamber.sh"
 
@@ -49,13 +49,11 @@ do
 			do
 				for T in "${Ts[@]}"
 				do
-					for run in {1..20} # inclusive
-					do
-						echo $run
 
 workingDirectory="simulations/trial"$run"_n_"$n"_p_"$p"_mn_"$mn"_mx_"$mx"_T_"$T"_$(date +%Y%m%d_%H%M%S)"
-bash $SCRIPT_PATH "simulations" "$n" "$p" "$mn" "$mx" "$T" $SLURM_ARRAY_TASK_ID $workingDirectory # the trial number is used for the random_seed
-   					done
+#bash $SCRIPT_PATH "simulations" "$n" "$p" "$mn" "$mx" "$T" $SLURM_ARRAY_TASK_ID "$workingDirectory" # the trial number is used for the random_seed
+bash $SCRIPT_PATH "simulations" "$n" "$p" "$mn" "$mx" "$T" 1 "$workingDirectory" # the trial number is used for the random_seed
+
 				done
 			done
 		done
