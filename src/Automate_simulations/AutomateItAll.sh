@@ -7,7 +7,7 @@
 #SBATCH --mem=10GB
 #SBATCH --time=72:00:00
 #SBATCH --mail-user=rr2635@nyu.edu
-#SBATCH --array=0-20
+##SBATCH --array=0-20
 module purge
 module load python3/intel/3.6.3
 #module load parallel/20171022
@@ -22,19 +22,23 @@ ps=( 2, 10, 15, 50, 60, 100 )
 Ts=( 50, 100, 200 )
 
 
-ns=( 20, 40, 100, 200 )
-#ns=( 20)
+ns=( 20 , 40 , 100 , 200 )
+
 
 mns=( 2)
 
-mxs=(4, 6, 10, 16)
-#mxs=(8)
+mxs=(4 , 6 , 10 , 16 )
 
-ps=( 2, 10, 15, 30, 50, 60, 100 )
-#ps=( 50)
 
-Ts=( 100, 500, 1000 )
-#Ts=( 10 )
+ps=( 2 , 10 , 15 , 30 , 50 , 60 , 100 )
+
+
+Ts=( 100 , 500 , 1000 )
+
+ns=( 20)
+mxs=(8)
+ps=( 50)
+Ts=( 10 )
 #workingDirectory="simulation/hello"
 SCRIPT_PATH="./statistical_echo_chamber.sh"
 
