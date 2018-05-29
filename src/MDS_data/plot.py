@@ -29,7 +29,12 @@ print("Number of connected components = ", len(components))
 
 similarities_ = dict(nx.all_pairs_dijkstra_path_length(g))
 
-similarities = [[0,2],[2,0]]#[[similarities_[i][j] for i in range(vertices)] for j in range(vertices)]
+similarities = [[0 for i in range(vertices)] for j in range(vertices)]
+for i in range(vertices):
+    for j in range(vertices):
+        similarities[i][j] = 1
+        if j in similarities_[i]:
+            similarities[i][j] = similarities_[i][j]
 
 mds = manifold.MDS(
     n_components=2, #3,
