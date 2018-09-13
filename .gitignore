@@ -1,5 +1,7 @@
 output/*
 input/*
+scratch/*
+data/*
 
 *__pycache__/*
 
